@@ -100,6 +100,8 @@ type ReleaseInfo struct {
 }
 
 func getRelease(username, token, id string) error {
+	fmt.Println("📥 Fetching release:", id)
+
 	// if directory with the release already exists, early return
 	matches, err := filepath.Glob("*-" + id)
 	if err != nil {
@@ -205,6 +207,8 @@ func getRelease(username, token, id string) error {
 		fmt.Println("warning: could not download cover for", id, "-", err)
 	}
 
+	fmt.Println("✅ Release downloaded", id)
+	fmt.Println("- - -")
 	return nil
 }
 
