@@ -17,11 +17,17 @@ make build
 Single:
 
 ```
-./drd --username=XXX token=XXX --ids=12345678
+./drd --username=XXX --token=XXX --ids=12345678
 ```
 
 Or multiple:
 
 ```
-./drd --username=XXX token=XXX --ids=12345678,23456789
+./drd --username=XXX --token=XXX --ids=12345678,23456789
 ```
+
+### Flags
+
+- `--username` - Discogs username (required)
+- `--token` - Discogs API token (required)
+- `--ids` - comma-separated release IDs (technically not required, but it makes no sense to skip it)
