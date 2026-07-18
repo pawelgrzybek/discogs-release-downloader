@@ -100,7 +100,7 @@ type ReleaseInfo struct {
 }
 
 func getRelease(username, token, id string) error {
-	fmt.Println("📥 Fetching release:", id)
+	fmt.Println("📥 Schedule release downlaod:", id)
 
 	// if directory with the release already exists, early return
 	matches, err := filepath.Glob("*-" + id)
@@ -108,7 +108,7 @@ func getRelease(username, token, id string) error {
 		return err
 	}
 	if len(matches) > 0 {
-		fmt.Println("Already exists, skipping:", id)
+		fmt.Println("🍪 Already exists, skipping:", id)
 		return nil
 	}
 
@@ -208,7 +208,6 @@ func getRelease(username, token, id string) error {
 	}
 
 	fmt.Println("✅ Release downloaded", id)
-	fmt.Println("- - -")
 	return nil
 }
 
@@ -234,15 +233,20 @@ func main() {
 		os.Exit(1)
 	}
 
+	var wg sync.WaitGroup
 	count := 0
 	for id := range strings.SplitSeq(*IDs, ",") {
 		if count > 0 && count%batchSize == 0 {
+			wg.Wait()
 			fmt.Println("Sleeping for 1 minute to avoid rate limit...")
 			time.Sleep(time.Minute)
 		}
-		if err := getRelease(*username, *token, id); err != nil {
-			fmt.Println("Error getting release: ", err)
-		}
+		wg.Go(func() {
+			if err := getRelease(*username, *token, id); err != nil {
+				fmt.Println("Error getting release: ", err)
+			}
+		})
 		count++
 	}
+	wg.Wait()
 }
